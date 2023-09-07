@@ -18,7 +18,7 @@ const DetailProduct = () => {
     }, [cartItems])
     const route = useRoute();
     const id = route.params.Data;
-    const count = useSelector((state) => state.counter[product.id] || 1);
+    const count = useSelector((state) => state.counter[product.id] || 0);
     const cartItems = useSelector((state) => state.CartItems);
     const dispatch = useDispatch();
     const isInCart = cartItems[product.id];

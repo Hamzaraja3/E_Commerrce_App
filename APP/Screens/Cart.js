@@ -7,28 +7,32 @@ import TabNavigation from '../components/TabNavigation';
 const Cart = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector(state => state.CartItems);
-  const ProductData = useSelector(state => state.productData);
+  const ProductData = useSelector(state => state.productData || []);
   const [totalPrice, setTotalPrice] = useState(0)
   const [activeTab, setActiveTab] = useState('Cart');
+  const cartItemDetails = ProductData.filter(product => cartItems[product.id]);
+  const specificCount = useSelector(state => state.counter) || 1;
+  const handleCartButtonClick = (productId) => {
+    dispatch(removetoCart(productId));
+  }
+  
   useEffect(() => {
     console.log('cartItems:', cartItems);
     console.log('ProductData:', ProductData);
-    const total = cartItemDetails.reduce((acc, item) => {
-      const itemPrice = item.price || 0; 
-      const itemCount = item.specificCount || 0; 
-      return acc + itemPrice * itemCount;
-    }, 0);
-    setTotalPrice(total);
-  }, [cartItemDetails]);
+    if (ProductData) {
+      const total = cartItemDetails.reduce((acc, item) => {
+        console.log('item:', item);
+        const itemPrice = item.price || 0;
+        const itemCount = specificCount[item.id] || 1;
+        return acc + itemPrice * itemCount;
+      }, 0);
+      setTotalPrice(total);
+    }
+  }, [cartItemDetails, ProductData]);
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
   };
-  const cartItemDetails = Object.keys(cartItems).map(productId => {
-    const product = ProductData.find(item => item.id === Number(productId));
-    const quantityInCart = cartItems[productId];
-    const specificCount = useSelector(state => state.counter[productId])|| 1;
-    return { ...product, quantity: quantityInCart, specificCount };
-  });
+
   const renderItem = ({ item }) => (
     <View style={styles.cartItemContainer}>
       <Image source={{ uri: item.thumbnail }} style={styles.itemImage} />
@@ -39,8 +43,11 @@ const Cart = () => {
         </View>
         <Text>{item.category}</Text>
         <Text>Price: ${item.price}</Text>
-        <Text>Quantity: {item.specificCount}</Text>
+        <Text>Quantity: {specificCount[item.id]}</Text>
       </View>
+      <TouchableOpacity onPress={() => handleCartButtonClick(item.id)}>
+        <Text style={styles.removeButton}>Remove</Text>
+      </TouchableOpacity>
     </View>
   );
   return (
@@ -85,7 +92,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    marginHorizontal: 15
+
   },
   header: {
     fontSize: 24,
@@ -126,6 +133,11 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginBottom: 10,
     borderRadius: 14
+  },
+  removeButton: {
+    color: 'red',
+    fontSize: 16,
+    marginTop: 8,
   },
 });
 
