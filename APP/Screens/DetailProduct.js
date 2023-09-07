@@ -8,7 +8,8 @@ import { addtoCart, removetoCart } from '../components/Action';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { SliderBox } from "react-native-image-slider-box";
-const DetailProduct = () => {
+import Icon from 'react-native-vector-icons/FontAwesome';
+const DetailProduct = ({navigation}) => {
     const [product, setproduct] = useState([])
     const [images, setImages] = useState([]);
     const Api_Product = 'https://dummyjson.com/products'
@@ -57,13 +58,13 @@ const DetailProduct = () => {
                 autoplay
                 resizeMethod={'resize'}
                 resizeMode={'cover'}
-              ImageComponentStyle={{ borderRadius: 15, width: '95%', marginTop: 5 }}
+                ImageComponentStyle={{ borderRadius: 15, width: '95%', marginTop: 5 }}
 
             />
             <View style={styles.DetailCard}>
-            <View style={styles.discountContainer}>
-          <Text style={styles.discountText}>{product.discountPercentage}% off</Text>
-        </View>
+                <View style={styles.discountContainer}>
+                    <Text style={styles.discountText}>{product.discountPercentage}% off</Text>
+                </View>
                 <View style={styles.header}>
                     <Text style={styles.headerText}>{product.title}</Text>
                     <Text style={styles.headerText2}>Price: ${product.price}</Text>
@@ -78,7 +79,7 @@ const DetailProduct = () => {
                         selectedColor="black"
                         showRating={false}
                     />
-                    <Text style={{color:'black'}}>({product.rating} Rating)</Text>
+                    <Text style={{ color: 'black' }}>({product.rating} Rating)</Text>
                 </View>
                 <Text style={styles.description}>{product.description}</Text>
                 <View style={styles.btncontainer}>
@@ -89,6 +90,10 @@ const DetailProduct = () => {
                         </Text>
                     </TouchableOpacity>
                 </View>
+                <TouchableOpacity style={styles.btn2} onPress={() => navigation.navigate('Cart')}>
+                    <Icon name="shopping-cart" size={20} color="white" style={styles.icon} />
+                    <Text style={styles.btnText}>Go to Cart</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -100,10 +105,10 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
         backgroundColor: '#ffffff',
-      
+
     },
     DetailCard: {
-       
+
         height: '70%',
         shadowColor: '#000',
         shadowOffset: {
@@ -115,45 +120,45 @@ const styles = StyleSheet.create({
         elevation: 13,
         backgroundColor: '#ffffff',
         borderRadius: 26,
-        marginVertical:15,
-        marginHorizontal:10,
-        padding:5,
-        
-        justifyContent:'center'
+        marginVertical: 15,
+        marginHorizontal: 10,
+        padding: 5,
+
+        justifyContent: 'center'
     },
     discountContainer: {
         position: 'absolute',
         top: 10,
         right: 10,
-        backgroundColor: '#F8BEAC', 
+        backgroundColor: '#F8BEAC',
         padding: 5,
         borderRadius: 5,
-      },
-      discountText: {
+    },
+    discountText: {
         color: 'white',
         fontWeight: 'bold',
-      },
+    },
     header: {
         flexDirection: 'row',
-       justifyContent:"space-between",
+        justifyContent: "space-between",
         alignSelf: 'center',
     },
     headerText: {
         fontSize: 22,
         fontWeight: '900',
-      width:"50%",
-      color:'black'
+        width: "50%",
+        color: 'black'
     },
     headerText2: {
         fontSize: 22,
         fontWeight: '900',
-        color:'black'
+        color: 'black'
     },
     second: {
         width: '40%',
         fontSize: 16,
         textAlign: 'center',
-        color:'black'
+        color: 'black'
     },
     rating: {
         width: '60%',
@@ -165,19 +170,19 @@ const styles = StyleSheet.create({
         textAlign: 'auto',
         paddingHorizontal: 15,
         fontSize: 15,
-        color:'black'
+        color: 'black'
     },
- 
+
     btncontainer: {
         flexDirection: 'row',
         marginVertical: 20,
     },
     btn: {
-        width: '40%',
-        height: '100%',
         borderRadius: 35,
         backgroundColor: 'black',
-        marginHorizontal: 18,
+       marginVertical:10,
+        paddingHorizontal:10,
+        alignSelf:'center'
     },
     btnText: {
         textAlign: 'center',
@@ -185,5 +190,19 @@ const styles = StyleSheet.create({
         color: 'white',
         paddingVertical: 10,
     },
- 
+    icon: {
+        paddingVertical:10,
+        marginHorizontal:12,alignSelf:'center'
+      },
+      btn2: {
+      
+        backgroundColor: 'black',
+       marginVertical:10,
+        paddingHorizontal:10,
+        alignSelf:'center',
+        flexDirection:'row',
+        width:'50%',
+        borderRadius:12
+    
+    },
 });

@@ -57,7 +57,7 @@ const Cart = () => {
         renderItem={renderItem}
         keyExtractor={item => item.id}
       />
-      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
+      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginHorizontal:10 }}>
         Total Price: ${totalPrice.toFixed(2)}
       </Text>
       <TouchableOpacity
@@ -125,7 +125,8 @@ const styles = StyleSheet.create({
   btnText: {
     color: 'white',
     textAlign: 'center',
-    padding: 8
+    padding: 8,
+
   },
   itemImage: {
     width: '100%',
