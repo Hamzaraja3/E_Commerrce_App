@@ -20,7 +20,7 @@ const TabNavigation = ({ activeTab, onChangeTab}) => {
         onPress={() => navigation.navigate(tab.screen)}
         
       >
-        <Icon name={tab.icon} size={24} color={activeTab === tab.id ? 'black' : 'gray'} />
+        <Icon name={tab.icon} size={24} color={activeTab === tab.id ? '#e20001' : 'gray'} />
         <Text style={styles.tabLabel}>{tab.label}</Text>
       </TouchableOpacity>
     ))}

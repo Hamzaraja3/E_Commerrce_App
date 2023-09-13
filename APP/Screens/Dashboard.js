@@ -1,44 +1,26 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { Searchbar } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/EvilIcons';
 import TabNavigation from '../components/TabNavigation';
-import { setProductData } from '../components/Action';
-import { useDispatch } from 'react-redux';
 import axios from 'axios';
 const Dashboard = ({ navigation }) => {
-  const dispatch = useDispatch();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredData, setFilteredData] = useState([]);
   const [category, setCategory] = useState([]);
-  const [product, setproduct] = useState([])
   const [activeTab, setActiveTab] = useState('Dashboard');
   const Api_Categories = 'https://dummyjson.com/products/categories';
-  const Api_Product = 'https://dummyjson.com/products'
-  const [visible, setVisible] = useState(false)
   const [selectCategory, setSelectCategory] = useState('')
   const handleCategoryPress = (selectedCategory) => {
     setSelectCategory(selectedCategory);
   };
 
-  const handleSearch = () => {
-    setVisible(true)
-  }
+
   useEffect(() => {
     Get_Categories()
-    Get_Products()
   }, [])
-  useEffect(()=>{
-    const productData = product; 
-    dispatch(setProductData(productData));
-    console.log(setProductData(product))
-  },[product])
   const Get_Categories = async () => {
     try {
       await axios.get(Api_Categories)
         .then(response => {
           setCategory(response.data)
-          // console.log(response.data)
+          console.log(response.data)
         })
 
     } catch (error) {
@@ -46,62 +28,69 @@ const Dashboard = ({ navigation }) => {
       throw error;
     }
   };
-  const Get_Products = async () => {
-    try {
-      await axios.get(Api_Product)
-        .then(response => {
-          setproduct(response.data.products)
-          // console.log(response.data)
-        })
-
-    } catch (error) {
-      console.error('Error fetching All Products:', error);
-      throw error;
-    }
-  };
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
   };
-  const onChangeSearch = (query) => {
-    setSearchQuery(query);
-    filterData(query);
+  const getImageForCategory = (category) => {
+    switch (category) {
+      case 'smartphones':
+        return require('../assests/iphone.png');
+      case 'laptops':
+        return require('../assests/laptops.png');
+      case 'fragrances':
+        return require('../assests/perfume.png');
+      case 'skincare':
+        return require('../assests/skincare.png');
+      case 'groceries':
+        return require('../assests/grocery.png');
+      case 'home-decoration':
+        return require('../assests/decoration.png');
+      case 'furniture':
+        return require('../assests/furniture.png');
+      case 'tops':
+        return require('../assests/tops.png');
+      case 'womens-dresses':
+        return require('../assests/womendress.png');
+      case 'womens-shoes':
+        return require('../assests/womenshoes.png');
+      case 'womens-dresses':
+        return require('../assests/womendress.png');
+      case 'mens-shoes':
+        return require('../assests/mens.png');
+      case 'mens-shirts':
+        return require('../assests/shirts.png');
+      case 'mens-watches':
+        return require('../assests/menwatch.png');
+      case 'womens-watches':
+        return require('../assests/womenwatch.png');
+      case 'womens-bags':
+        return require('../assests/bag.png');
+      case 'womens-jewellery':
+        return require('../assests/tops.png');
+      case 'sunglasses':
+        return require('../assests/glasses.png');
+      case 'automotive':
+        return require('../assests/automotive.png');
+      case 'motorcycle':
+        return require('../assests/bike.png');
+        case 'lighting':
+        return require('../assests/light.png');
+      default:
+        return require('../assests/default.png');
+    }
   };
-  const filterData = (query) => {
-    const filtered = product.filter(
-      (item) =>
-        item.title &&
-        item.title.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredData(filtered);
-  };
-  const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
-      <TouchableOpacity onPress={() => navigation.navigate('Details', { Data: item.id })}>
-        <Image source={{ uri: item.thumbnail }} style={styles.itemImage} />
-        <Text style={styles.itemTitle}>{item.title}</Text>
-        <Text style={styles.itemTitle}>{item.brand}</Text>
-        <Text style={styles.itemDescription}>{item.description}</Text>
-        <Text style={styles.itemPrice}>Price: ${item.price}</Text>
+  const renderItems = ({ item }) => (
+    <View style={styles.itemlist}>
+      <TouchableOpacity onPress={()=>navigation.navigate('Product',{Data:item})}>
+      <Image
+        source={getImageForCategory(item)}
+        style={styles.categoryImage}
+        resizeMode="contain"
+      />
+      <Text style={{color:'black',textAlign:'center',fontSize:18}}>{item}</Text>
       </TouchableOpacity>
     </View>
   );
-  const renderItems = ({ item }) => (
-    <TouchableOpacity style={[
-      styles.btn,
-      {
-        backgroundColor:
-          selectCategory === item ? 'red' : 'black',
-      },
-    ]}
-      onPress={() => { handleCategoryPress(item); handleSearch(); }}>
-
-      <Text style={styles.btnText}>{item}</Text>
-    </TouchableOpacity>
-  );
-  const filteredProducts =
-    selectCategory === ''
-      ? product
-      : product.filter((item) => item.category === selectCategory);
   return (
     <ScrollView style={styles.container}>
       <View style={styles.innerContainer}>
@@ -110,50 +99,19 @@ const Dashboard = ({ navigation }) => {
         <View style={styles.imgContainer}>
           <Image source={require('../assests/profile.jpg')} style={styles.img} />
         </View>
-        {visible && <Searchbar
-          placeholder="Search Name"
-          onChangeText={onChangeSearch}
-          value={searchQuery}
-          style={styles.searchBox}
-          icon={() => <Icon name="search" size={30} color="grey" />}
-          clearIcon={searchQuery.length > 0 ? () => (
-            <Icon
-              name="close-o"
-              size={20}
-              color="grey"
-              onPress={() => {
-                setSearchQuery('');
-                filterData('');
-                setVisible(false)
-              }}
-            />
-          ) : undefined}
-
-        />}
         <View style={styles.categoryList}>
           <FlatList
             data={category}
             renderItem={renderItems}
             keyExtractor={(item) => item}
-            horizontal={true}
+            numColumns={2}
             contentContainerStyle={styles.btnlist}
-          />
-        </View>
-        <View style={styles.mainMiddle}>
-          <Text style={styles.middleheader}>Top Products</Text>
-          <TouchableOpacity style={styles.middleheader2} onPress={Get_Products}><Text style={styles.textShow}>Show All</Text></TouchableOpacity>
-        </View>
-        <View style={styles.productMain}>
-          <FlatList
-            data={searchQuery ? filteredData : filteredProducts}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
           />
         </View>
         <TabNavigation activeTab={activeTab} onChangeTab={handleTabChange} />
       </View>
     </ScrollView>
-    
+
   )
 }
 
@@ -167,7 +125,7 @@ const styles = StyleSheet.create({
 
     // alignItems: 'center',
     justifyContent: 'flex-start',
-   
+
   },
   header1: {
     textAlign: 'left',
@@ -178,7 +136,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     marginTop: 20,
     color: 'black',
-    paddingHorizontal:10
+    paddingHorizontal: 10
   },
   header2: {
     textAlign: 'left',
@@ -188,7 +146,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     fontFamily: 'Poppins-Regular',
     color: 'black',
-    paddingHorizontal:10
+    paddingHorizontal: 10
   },
   imgContainer: {
     position: 'absolute',
@@ -200,24 +158,17 @@ const styles = StyleSheet.create({
     height: 60,
     alignSelf: 'flex-end',
   },
-  searchBox: {
-    backgroundColor: '#f4f1f9',
-    borderRadius: 24,
-    width: '90%',
-    marginTop: 20,
-    marginHorizontal:15
-  },
   filterContainer: {
     flexDirection: 'row',
-  marginVertical:10,
-  marginBottom:10
+    marginVertical: 10,
+    marginBottom: 10
   },
   btn: {
-  margin:4,
+    margin: 4,
     borderRadius: 24,
     paddingVertical: 6,
     backgroundColor: '#000',
-    marginBottom:6
+    marginBottom: 6
 
 
   },
@@ -227,62 +178,24 @@ const styles = StyleSheet.create({
     color: '#ffff',
     paddingHorizontal: 15,
   },
-  mainMiddle: {
-    flexDirection: 'row',
-    marginVertical: 10
-  },
-  middleheader: {
-    fontSize: 24,
-    fontFamily: 'Poppins-Bold',
-    width: '45%',
-    color: 'black',
-    paddingHorizontal:10
-  },
-  middleheader2: {
-    width: '50%',
-  
-  },
-  textShow: {
-    textAlign: 'right',
-    paddingVertical: 5,
-    fontSize: 16,
-    fontFamily: 'Poppins-Regular',
-    color:'red',
-    
-  },
   categoryList: {
-    height: 50,
-    marginTop: 5,
-   
-  },
-  itemContainer: {
-    margin: 10,
-    borderRadius: 8,
-    backgroundColor: '#f4f1f9',
-  },
-  itemImage: {
     width: '100%',
-    height: 120,
-    resizeMode: 'contain',
-    marginBottom: 10,
-    borderRadius: 14
+    margin: 4,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden', 
   },
-  itemTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'black',
-    paddingHorizontal: 8
+  categoryImage: {
+
+    width: 130,
+    height: 130,
   },
-  itemDescription: {
-    fontSize: 14,
-    padding: 4,
-    color: 'black',
-  },
-  itemPrice: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'black',
-    paddingHorizontal: 8,
-    paddingBottom: 4
-  },
+  itemlist: {
+    margin: 10,
+    borderRadius: 22,
+    backgroundColor: '#f4f1f9',
+    padding: 10,
+    alignItems: 'center'
+  }
 });

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { removetoCart } from '../components/Action';
 import TabNavigation from '../components/TabNavigation';
+import Count from '../components/Count';
 const Cart = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector(state => state.CartItems);
@@ -45,9 +46,12 @@ const Cart = () => {
         <Text>Price: ${item.price}</Text>
         <Text>Quantity: {specificCount[item.id]}</Text>
       </View>
-      <TouchableOpacity onPress={() => handleCartButtonClick(item.id)}>
-        <Text style={styles.removeButton}>Remove</Text>
+      <View style={{flexDirection:'row'}}>
+      <Count productId={item.id} count={specificCount[item.id]}/>
+      <TouchableOpacity onPress={() => handleCartButtonClick(item.id)} style={styles.removeButton}>
+        <Icon name='trash' size={28} color='red'/>
       </TouchableOpacity>
+      </View>
     </View>
   );
   return (
@@ -136,9 +140,11 @@ const styles = StyleSheet.create({
     borderRadius: 14
   },
   removeButton: {
-    color: 'red',
     fontSize: 16,
     marginTop: 8,
+    paddingVertical:10,
+    paddingHorizontal:10,
+    marginHorizontal:10
   },
 });
 

@@ -32,7 +32,7 @@ export const removetoCart=(productId)=>{
   }
 }
 export const setProductData = (Data) => {
-  console.log("productData",Data)
+  // console.log("productData",Data)
   return {
     type: ProductData, 
     payload: Data,

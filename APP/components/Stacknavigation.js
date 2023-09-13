@@ -9,6 +9,7 @@ import Products from '../Screens/Products';
 import Cart from '../Screens/Cart';
 import Profile from '../Screens/Profile';
 import DetailProduct from '../Screens/DetailProduct';
+import CategoryProduct from '../Screens/CategoryProduct';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,8 +25,9 @@ const Stacknavigation = () => {
         <Stack.Screen name="Login" component={Login} options={{headerShown:false}} />
         <Stack.Screen name="Signup" component={Signup} options={{headerShown:false}} />
         <Stack.Screen name="Dashboard" component={Dashboard} options={{headerShown:false}} />
+        <Stack.Screen name="Product" component={CategoryProduct}/>
         <Stack.Screen name="Products" component={Products} options={{headerShown:false}} />
-        <Stack.Screen name="Cart" component={Cart} options={{headerShown:true}} />
+        <Stack.Screen name="Cart" component={Cart} options={{headerShown:false}} />
         <Stack.Screen name="Profile" component={Profile} options={{headerShown:false}} />
         <Stack.Screen name="Details" component={DetailProduct} options={{headerShown:false}} />
       </Stack.Navigator>
